@@ -336,6 +336,12 @@
                 <div class="field">
                     <input type="text" name="company" placeholder="Company name" autocomplete="organization" required>
                 </div>
+                <input type="hidden" name="utm_source" id="utm_source">
+                <input type="hidden" name="utm_medium" id="utm_medium">
+                <input type="hidden" name="utm_campaign" id="utm_campaign">
+                <input type="hidden" name="utm_content" id="utm_content">
+                <input type="hidden" name="utm_term" id="utm_term">
+                <input type="hidden" name="referrer" id="referrer">
                 <button type="submit" class="cta" id="submitBtn">Count me in</button>
                 <p class="fineprint">We only reach out about Bosses of Bangalore. No spam, ever. · <a href="https://www.grapevine.in/privacy" target="_blank" rel="noopener">Privacy Policy</a></p>
             </form>
@@ -352,6 +358,25 @@
         const form = document.getElementById('signup');
         const btn = document.getElementById('submitBtn');
         const phone = document.getElementById('phone');
+
+        // UTM attribution (first-touch): capture source params from the URL on
+        // arrival and persist them, so a later refresh or direct return still
+        // records where the lead originally came from.
+        (function captureAttribution() {
+            const fields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+            const params = new URLSearchParams(location.search);
+            const hasUtm = fields.some(f => params.get(f));
+            let store = {};
+            if (hasUtm) {
+                fields.forEach(f => store[f] = params.get(f) || '');
+                try { localStorage.setItem('boss_attribution', JSON.stringify(store)); } catch (e) {}
+            } else {
+                try { store = JSON.parse(localStorage.getItem('boss_attribution') || '{}'); } catch (e) {}
+            }
+            fields.forEach(f => { const el = document.getElementById(f); if (el) el.value = store[f] || ''; });
+            const ref = document.getElementById('referrer');
+            if (ref) ref.value = document.referrer || '';
+        })();
 
         // Keep the field to 10 digits, formatted as xxxxx-xxxxx. The +91 lives
         // in the fixed prefix, so it can't be edited or deleted.
