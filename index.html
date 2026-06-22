@@ -397,15 +397,17 @@
             btn.textContent = 'Sending…';
 
             try {
-                // Apps Script web apps don't send CORS headers, so we post in
-                // no-cors mode. The response is opaque; a resolved fetch means
-                // the row was delivered to the Sheet.
-                const data = new FormData(form);
-                data.set('phone', '91' + phone.value.replace(/\D/g, ''));
+                // Send as application/x-www-form-urlencoded (URLSearchParams),
+                // NOT FormData — Apps Script only parses url-encoded bodies into
+                // e.parameter, so multipart/form-data arrives with empty fields.
+                // no-cors is fine: url-encoded is a CORS-safelisted content type.
+                const body = new URLSearchParams();
+                for (const [k, v] of new FormData(form).entries()) body.append(k, v);
+                body.set('phone', '91' + phone.value.replace(/\D/g, ''));
                 await fetch(form.action, {
                     method: 'POST',
                     mode: 'no-cors',
-                    body: data
+                    body: body
                 });
                 showSuccess();
             } catch (err) {
