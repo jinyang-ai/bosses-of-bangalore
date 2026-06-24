@@ -378,6 +378,15 @@
             if (ref) ref.value = document.referrer || '';
         })();
 
+        // Pre-fill name + company from the invite link (?name=...&company=...),
+        // so a boss arriving from the email only has to enter their number.
+        (function prefillFromLink() {
+            const p = new URLSearchParams(location.search);
+            const setVal = (sel, v) => { const el = form.querySelector(sel); if (el && v) el.value = v; };
+            setVal('input[name="name"]', p.get('name'));
+            setVal('input[name="company"]', p.get('company'));
+        })();
+
         // Keep the field to 10 digits, formatted as xxxxx-xxxxx. The +91 lives
         // in the fixed prefix, so it can't be edited or deleted.
         phone.addEventListener('input', () => {
