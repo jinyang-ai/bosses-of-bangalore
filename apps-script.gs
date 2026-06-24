@@ -94,3 +94,36 @@ function sendWatiMessage(d) {
     muteHttpExceptions: true
   });
 }
+
+/**
+ * Diagnostic — run this once from the editor (select runWatiSelfTest in the
+ * toolbar dropdown → Run). It forces the authorization prompt for external
+ * requests AND prints the result to the execution log (View → Logs).
+ * Sends a real test message to the number below.
+ */
+function runWatiSelfTest() {
+  var token = PropertiesService.getScriptProperties().getProperty('WATI_TOKEN');
+  Logger.log('WATI_TOKEN present: ' + (token ? 'YES (' + token.length + ' chars)' : 'NO — set it in Project Settings → Script Properties'));
+  if (!token) return;
+
+  var resp = UrlFetchApp.fetch(
+    WATI_ENDPOINT + '/api/v1/sendTemplateMessage?whatsappNumber=919599530490',
+    {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + token, accept: '*/*' },
+      payload: JSON.stringify({
+        template_name: WATI_TEMPLATE,
+        broadcast_name: WATI_BROADCAST,
+        parameters: [
+          { name: '1', value: 'Self Test 🪷' },
+          { name: '2', value: WATI_PARAM_2 },
+          { name: '3', value: WATI_PARAM_3 }
+        ]
+      }),
+      muteHttpExceptions: true
+    }
+  );
+  Logger.log('HTTP ' + resp.getResponseCode());
+  Logger.log(resp.getContentText());
+}
