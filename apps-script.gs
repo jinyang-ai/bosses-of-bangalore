@@ -24,7 +24,7 @@ var WATI_ENDPOINT  = 'https://live-mt-server.wati.io/10180285';
 var WATI_TEMPLATE  = 'boss_ack';
 var WATI_BROADCAST = 'boss_ack_signup';
 var WATI_PARAM_2   = 'the mission - great bosses hire directly, and Bangalore gets built by people like you.';
-var WATI_PARAM_3   = 'Enter the adventure. Join the community → https://chat.whatsapp.com/CurDSi18V6SG2QAzRblo45';
+var WATI_PARAM_3   = 'Enter the adventure';
 
 function doPost(e) {
   try {
