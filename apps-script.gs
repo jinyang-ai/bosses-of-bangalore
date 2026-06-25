@@ -24,7 +24,7 @@ var WATI_ENDPOINT  = 'https://live-mt-server.wati.io/10180285';
 var WATI_TEMPLATE  = 'boss_ack';
 var WATI_BROADCAST = 'boss_ack_signup';
 var WATI_PARAM_2   = 'the mission - great bosses hire directly, and Bangalore gets built by people like you.';
-var WATI_PARAM_3   = 'Enter the adventure';
+var WATI_PARAM_3   = ' '; // single space — template rejects an empty value, this renders as a blank line
 
 function doPost(e) {
   try {
